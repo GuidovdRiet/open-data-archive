@@ -1,0 +1,42 @@
+{
+  "name": "open-data-archive",
+  "version": "1.0.0",
+  "description": "",
+  "main": "start.js",
+  "scripts": {
+    "start": "node ./start.js",
+    "watch": "nodemon ./start.js --ignore public/",
+    "dev": "concurrently \"npm run watch\" \"npm run assets\" --names \"💻,📦\" --prefix name",
+    "assets": "webpack -w --display-max-modules 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GuidovdRiet/gimmie.git"
+  },
+  "author": "guido vd riet",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GuidovdRiet/gimmie/issues"
+  },
+  "homepage": "https://github.com/GuidovdRiet/gimmie#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.3",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "express-session": "^1.16.1",
+    "express-validator": "^5.3.1",
+    "mapbox-geocoding": "^0.1.5",
+    "mongoose": "^5.5.7",
+    "passport": "^0.4.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2"
+  }
+}
