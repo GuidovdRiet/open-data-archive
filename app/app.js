@@ -12,7 +12,7 @@ const cors = require("cors");
 const routes = require("./routes/index");
 const helpers = require("./helpers");
 
-// create our Express app
+// create app
 const app = express();
 
 // serves up static files from the public folder. Anything in public/ will just be served up as the file it is
@@ -41,37 +41,19 @@ app.use(
   })
 );
 
-// // Passport JS is what we use to handle our logins
+// // Passport JS for logins
 app.use(passport.initialize());
 app.use(passport.session());
 
-// // The flash middleware let's us use req.flash('error', 'Shit!'), which will then pass that message to the next page the user requests
+// The flash middleware use req.flash('error', 'Shit!'), which will then pass that message to the next page the user requests
 app.use(flash());
 
-// pass variables to our templates + all requests
-app.use((req, res, next) => {
-  res.locals.h = helpers;
-  res.locals.flashes = req.flash();
-  res.locals.user = req.user || null;
-  res.locals.currentPath = req.path;
-  next();
-});
-
-// Set up a whitelist and check against it:
-// setup for productions
-// const whitelist = ['http://http://localhost:3000/', 'http://localhost:3000/'];
-// const corsOptions = {
-//   origin(origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     }
-//  else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   }
-// };
-
-app.use(cors());
+// Cors
+var corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200
+};
+app.use(cors(corsOptions));
 
 // Handle our own routes!
 app.use("/", routes);

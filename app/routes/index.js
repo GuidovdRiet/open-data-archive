@@ -1,26 +1,21 @@
 const express = require("express");
+const multer = require("multer");
+const upload = multer({ dest: "tmp/csv/" });
 
 const router = express.Router();
 
 // Controllers
-const neighbourhoodController = require("../controllers/neighbourhoodController");
+const csvController = require("../controllers/csvController");
 
-
-// Do work here
-router.get("/", neighbourhoodController.getAll);
-router.get("/neighbourhoods", neighbourhoodController.getAll);
-router.get("/neighbourhoods/data", neighbourhoodController.getByData);
-router.get("/neighbourhoods/single", neighbourhoodController.getSingle);
-router.get(
-  "/neighbourhoods/high-satisfaction/:squareFeet/:budget",
-  neighbourhoodController.getByWOZbySquareFeed
-);
-router.get(
-  "/neighbourhoods/high-satisfaction",
-  neighbourhoodController.getHighestSatisfaction
+// Routes
+router.get("/", () => console.log("init route"));
+router.post(
+  "/upload-csv",
+  upload.single("file"),
+  csvController.convertCsvToJson
 );
 
-// ROUTE DOES NOT EXITS
+// Endpoint does not exist
 router.use("*", (req, res) => {
   res.status(404).json({
     error: "endpoint does not exist"
