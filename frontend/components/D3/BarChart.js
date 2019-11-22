@@ -1,27 +1,14 @@
 import { useEffect } from "react";
 import * as d3 from "d3";
 
-const BarChart = () => {
+const BarChart = ({ data }) => {
   const drawChart = () => {
-    const data = [
-      {
-        fruit: "Apple",
-        size: 12
-      },
-      {
-        fruit: "Sinas",
-        size: 14
-      },
-      {
-        fruit: "Peer",
-        size: 20
-      }
-    ];
+    if (!data) return null;
 
     // Global
-    const width = 500;
-    const height = 500;
-    const dataName = "size";
+    const width = 1000;
+    const height = 2000;
+    const dataName = "Freedom";
 
     // Scales
     const widthScale = d3
@@ -54,10 +41,12 @@ const BarChart = () => {
       .enter() // this contains an empty selection with three placeholders
       .append("g")
       .append("rect")
-      .attr("width", dataEl => widthScale(dataEl.size)) // loop over every element and return the value of the given array
+      .attr("width", dataEl =>
+        widthScale(Number(dataEl.Freedom) > 0 ? Number(dataEl.Freedom) : 0)
+      ) // loop over every element and return the value of the given array
       .attr("height", 40)
       .attr("y", (_, i) => i * 50)
-      .attr("fill", dataEl => colorScale(dataEl.size));
+      .attr("fill", dataEl => colorScale(Number(dataEl.Freedom)));
 
     canvas
       .append("g")
@@ -69,7 +58,7 @@ const BarChart = () => {
       .append("text")
       .attr("transform", (_, i) => `translate(20, ${i * 50 + 23})`)
       .attr("font-size", "1.23em")
-      // .text(dataEl => `${dataEl.size} ${dataEl.fruit}`)
+      .text(dataEl => (dataEl ? `Freedom: ${dataEl.Freedom}` : `skip`))
       .attr("fill", "white");
   };
 
