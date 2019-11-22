@@ -1,10 +1,13 @@
 import { useState } from "react";
 import axios from "axios";
 
+// Components
+import BarChart from "../components/D3/BarChart";
+
 const index = () => {
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose File");
-  const [uploadedFile, setUploadedFile] = useState({});
+  const [jsonDataResponse, setJsonDataResponse] = useState([]);
 
   const onChange = e => {
     setFile(e.target.files[0]);
@@ -27,9 +30,7 @@ const index = () => {
         }
       );
 
-      const { fileName, filePath } = res.data;
-
-      console.log({ res: res.data });
+      setJsonDataResponse(res.data);
 
       setUploadedFile({ fileName, filePath });
     } catch (err) {
@@ -46,11 +47,7 @@ const index = () => {
         </div>
         <input type="submit" value="Upload" />
       </form>
-      {uploadedFile ? (
-        <div>
-          <h3>{uploadedFile.fileName}</h3>
-        </div>
-      ) : null}
+      {jsonDataResponse.length && <BarChart data={jsonDataResponse} />}
     </>
   );
 };
