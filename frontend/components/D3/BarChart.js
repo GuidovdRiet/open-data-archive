@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import * as d3 from "d3";
 
-const BarChart = ({ data }) => {
+const BarChart = ({ data, currentKey }) => {
   const drawChart = () => {
     if (!data) return null;
 
@@ -9,26 +9,21 @@ const BarChart = ({ data }) => {
     const barMargin = 50;
 
     const baseWidth = 500;
-    const baseHeight = data.length * barHeight + barMargin;
 
     const margin = { top: 20, right: 30, bottom: 40, left: 90 };
     const width = baseWidth - margin.left - margin.right;
     const height =
-      data.reduce((prevValue, currentValue, i) => (prevValue = i * 50)) +
-      margin.bottom;
-
-    // Global
-    const dataName = "Freedom";
+      data.reduce((prevValue, _, i) => (prevValue = i * 50)) + margin.bottom;
 
     // Scales
     const widthScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data.map(d => d[dataName]))])
+      .domain([0, d3.max(data.map(d => d[currentKey]))])
       .range([0, width]);
 
     const colorScale = d3
       .scaleLinear()
-      .domain([0, d3.max(data.map(d => d[dataName]))])
+      .domain([0, d3.max(data.map(d => d[currentKey]))])
       .range(["#3498db", "#e67e22"]); // As closer to the smallest value, the first value will be used
 
     const axisBottom = d3
@@ -69,14 +64,20 @@ const BarChart = ({ data }) => {
       .attr("transform", (_, i) => `translate(20, ${i * 50 + 23})`)
       .attr("font-size", "1.23em")
       .text(dataEl =>
-        dataEl ? `Freedom: ${dataEl.Freedom} ${dataEl.Country}` : `skip`
+        dataEl ? `${currentKey}: ${dataEl[currentKey]}` : `skip`
       )
       .attr("fill", "white");
   };
 
+  const clearCurrentChart = () => {
+    const svg = d3.select("#bar-chart");
+    svg.selectAll("*").remove();
+  };
+
   useEffect(() => {
+    clearCurrentChart();
     drawChart();
-  }, []);
+  }, [currentKey]);
 
   return <div id="bar-chart"></div>;
 };
