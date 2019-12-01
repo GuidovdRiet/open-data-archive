@@ -6,11 +6,9 @@ const BarChart = ({ data, currentKey }) => {
     if (!data) return null;
 
     const barHeight = 40;
-    const barMargin = 50;
-
     const baseWidth = 500;
 
-    const margin = { top: 20, right: 30, bottom: 40, left: 90 };
+    const margin = { top: 20, right: 30, bottom: 40, left: 120 };
     const width = baseWidth - margin.left - margin.right;
     const height =
       data.reduce((prevValue, _, i) => (prevValue = i * 50)) + margin.bottom;
@@ -26,10 +24,20 @@ const BarChart = ({ data, currentKey }) => {
       .domain([0, d3.max(data.map(d => d[currentKey]))])
       .range(["#3498db", "#e67e22"]); // As closer to the smallest value, the first value will be used
 
+    const heigthScale = d3
+      .scaleBand()
+      .domain(data.map(d => d.Country))
+      .range([0, height]);
+
     const axisBottom = d3
       .axisBottom()
       .scale(widthScale)
       .ticks(5);
+
+    const axisLeft = d3
+      .axisLeft()
+      .scale(heigthScale)
+      .ticks(data.length);
 
     // Drawing
     const canvas = d3
@@ -38,7 +46,7 @@ const BarChart = ({ data, currentKey }) => {
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
-      .attr("transform", `translate(20, ${margin.top})`);
+      .attr("transform", `translate(150, ${margin.top})`);
 
     canvas
       .selectAll("g") // this creates an empty selection where we can bind the data to
@@ -59,13 +67,16 @@ const BarChart = ({ data, currentKey }) => {
       .call(axisBottom);
 
     canvas
+      .append("g")
+      .attr("transform", `translate(-10, 0)`)
+      .call(axisLeft);
+
+    canvas
       .selectAll("g") // this creates an empty selection where we can bind the data to
       .append("text")
       .attr("transform", (_, i) => `translate(20, ${i * 50 + 23})`)
       .attr("font-size", "1.23em")
-      .text(dataEl =>
-        dataEl ? `${currentKey}: ${dataEl[currentKey]}` : `skip`
-      )
+      .text(dataEl => (dataEl ? currentKey : ""))
       .attr("fill", "white");
   };
 
